@@ -210,6 +210,88 @@ void loop() {
 
 - Salida: El texto enviado a UART0 se reenvía a UART2 y viceversa, permitiendo la comunicación bidireccional.
 
+### Ejercicio Práctico 2: Módulo GPS
+
+Este ejercicio consiste en conectar un módulo GPS al ESP32 para recibir datos de posición, velocidad y hora actual. El módulo GPS se comunicará con el ESP32 a través del puerto UART2.
+
+Código para el Módulo GPS:
+```cpp
+#include <SoftwareSerial.h>
+#include <TinyGPS.h>
+
+TinyGPS gps;
+SoftwareSerial softSerial(4, 3);  // RX, TX
+
+void setup() {
+    Serial.begin(115200);
+    softSerial.begin(9600);
+    Serial.println("Esperando datos del GPS...");
+}
+
+void loop() {
+    while (softSerial.available()) {
+        char c = softSerial.read();
+        if (gps.encode(c)) {
+            float lat, lon;
+            unsigned long age;
+            gps.f_get_position(&lat, &lon, &age);
+            Serial.print("Latitud: ");
+            Serial.println(lat, 6);
+            Serial.print("Longitud: ");
+            Serial.println(lon, 6);
+            Serial.print("Satélites: ");
+            Serial.println(gps.satellites());
+            Serial.print("Precisión HDOP: ");
+            Serial.println(gps.hdop());
+            Serial.println();
+        }
+    }
+}
+```
+
+### Salida esperada:
+
+- Latitud y longitud en coordenadas decimales.
+
+- Número de satélites conectados.
+
+- Precisión del posicionamiento.
+
+### Ejercicio Práctico 3: Módulo GPRS/GSM
+
+Este ejercicio consiste en conectar un módulo GPRS/GSM al ESP32 para enviar datos a través de la red móvil. El módulo se conectará usando UART2 y requerirá configuración adicional para manejar comandos AT.
+
+Código para el Módulo GPRS/GSM:
+```cpp
+#include <TinyGsmClient.h>
+
+#define TINY_GSM_MODEM_SIM800
+
+TinyGsm modem(Serial2);
+
+void setup() {
+    Serial.begin(115200);
+    Serial2.begin(9600, SERIAL_8N1, 16, 17);
+    Serial.println("Inicializando el módem...");
+    if (!modem.restart()) {
+        Serial.println("Error al reiniciar el módem.");
+        while (true);
+    }
+    Serial.println("Módem inicializado correctamente.");
+    Serial.println(modem.getModemInfo());
+}
+
+void loop() {
+    // Aquí se pueden enviar comandos AT para conectarse a una red
+}
+```
+
+### Salida Esperada
+
+- Información del módem.
+
+- Confirmación de reinicio exitoso.
+
 ### Conclusión:
 
 Esta práctica permite comprender los conceptos básicos de la comunicación UART, su configuración y uso en el ESP32. El uso de múltiples puertos serie es esencial para proyectos que requieren la integración de módulos GPS, GSM o cualquier otro dispositivo serial. Este conocimiento es fundamental para avanzar en aplicaciones más complejas que involucren múltiples dispositivos.
