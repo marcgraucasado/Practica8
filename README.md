@@ -1,6 +1,6 @@
 # PR8-MarcGrau
 
-## PRACTICA 8: Buses de comunicación IV
+## PRACTICA 8: Buses de comunicación 4
 
 ## Objetivo: 
 
