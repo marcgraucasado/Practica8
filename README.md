@@ -51,6 +51,132 @@ Existen varios estándares para definir los niveles de voltaje de las señales U
 
 - Software: Implementa bytes especiales como ACK/NACK para confirmar la recepción correcta de paquetes.
 
+### Funciones Principales del Objeto Serial
+
+A continuación, se describen las funciones principales de la clase Serial, con ejemplos de uso:
+
+- if(Serial): Comprueba si el puerto serie está listo para usar.
+```cpp
+if (Serial) {
+    Serial.println("El puerto serie está listo.");
+}
+```
+- available(): Devuelve el número de bytes disponibles para leer desde el puerto serie.
+```cpp
+int bytesDisponibles = Serial.available();
+Serial.print("Bytes disponibles: ");
+Serial.println(bytesDisponibles);
+```
+- availableForWrite(): Devuelve el número de bytes libres en el buffer de transmisión.
+```cpp
+int espacioLibre = Serial.availableForWrite();
+Serial.print("Espacio libre en buffer: ");
+Serial.println(espacioLibre);
+```
+- begin(): Inicia la comunicación serie especificando la velocidad en baudios.
+```cpp
+Serial.begin(115200);
+```
+- end(): Detiene la comunicación serie.
+```cpp
+Serial.end();
+```
+- find(): Busca una cadena específica en el flujo de datos de entrada.
+```cpp
+if (Serial.find("OK")) {
+    Serial.println("Cadena 'OK' encontrada.");
+}
+```  
+- findUntil(): Busca una cadena específica hasta que se alcance otra cadena de finalización.
+```cpp
+if (Serial.findUntil("OK", "ERROR")) {
+    Serial.println("Encontrado 'OK' antes de 'ERROR'.");
+}
+```
+- flush(): Espera a que se envíen todos los datos en el buffer de salida.
+```cpp
+Serial.flush();
+Serial.println("Buffer de salida vacío.");
+```
+- parseFloat(): Lee el siguiente número de punto flotante del flujo de datos de entrada.
+```cpp
+float numero = Serial.parseFloat();
+Serial.print("Número flotante recibido: ");
+Serial.println(numero);
+```
+- parseInt(): Lee el siguiente número entero del flujo de datos de entrada.
+```cpp
+int numero = Serial.parseInt();
+Serial.print("Número entero recibido: ");
+Serial.println(numero);
+```
+- peek(): Devuelve el siguiente byte en el buffer de entrada sin eliminarlo.
+```cpp
+int siguienteByte = Serial.peek();
+Serial.print("Siguiente byte en buffer: ");
+Serial.println(siguienteByte);
+```
+- print(): Envía datos al puerto serie sin un salto de línea final.
+```cpp
+Serial.print("Hola, ");
+Serial.print("mundo!");
+```
+
+- println(): Envía datos al puerto serie con un salto de línea final.
+```cpp
+Serial.println("¡Hola mundo!");
+```
+- read(): Lee el siguiente byte disponible del puerto serie.
+```cpp
+int byteRecibido = Serial.read();
+Serial.print("Byte recibido: ");
+Serial.println(byteRecibido);
+```
+- readBytes(): Lee bytes del puerto serie en un buffer.
+```cpp
+char buffer[20];
+int bytesLeidos = Serial.readBytes(buffer, sizeof(buffer));
+Serial.print("Bytes leídos: ");
+Serial.println(bytesLeidos);
+```
+- readBytesUntil(): Lee bytes del puerto serie en un buffer hasta que se alcance un carácter de terminación.
+```cpp
+char buffer[20];
+int bytesLeidos = Serial.readBytesUntil('\n', buffer, sizeof(buffer));
+Serial.print("Bytes leídos hasta nueva línea: ");
+Serial.println(bytesLeidos);
+```
+- readString(): Lee todos los caracteres disponibles y los devuelve como una cadena.
+```cpp
+String mensaje = Serial.readString();
+Serial.print("Mensaje recibido: ");
+Serial.println(mensaje);
+```
+- readStringUntil(): Lee caracteres hasta que se alcance un carácter de terminación y los devuelve como una cadena.
+```cpp
+String mensaje = Serial.readStringUntil('\n');
+Serial.print("Mensaje hasta nueva línea: ");
+Serial.println(mensaje);
+```
+- setTimeout(): Establece el tiempo máximo de espera para operaciones de lectura.
+```cpp
+Serial.setTimeout(5000);  // 5 segundos
+```
+- write(): Envía un byte o una serie de bytes al puerto serie.
+```cpp
+Serial.write("Mensaje enviado");
+```
+- serialEvent(): Función de interrupción que se llama cuando hay datos disponibles para leer.
+```cpp
+  void serialEvent() {
+    while (Serial.available()) {
+        char c = Serial.read();
+        Serial.print("Dato recibido en evento: ");
+        Serial.println(c);
+    }
+}
+```
+
 ### Descripción del Código (Ejercicio Práctico 1):
 
 El código que se desarrollará en esta práctica consiste en crear un bucle de comunicación en el que los datos enviados a través del puerto serie principal del ESP32 (UART0) sean redirigidos a UART2, y viceversa. Esto permite visualizar en la consola los datos recibidos y enviados sin necesidad de hardware adicional.
